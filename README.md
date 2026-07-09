@@ -1,5 +1,9 @@
 # GIFMaker
 
+<p align="center">
+  <img src="assets/gifbin.png" alt="GIFMaker banner powered by Native SDK" width="720">
+</p>
+
 [![Built with Native SDK](https://img.shields.io/badge/Native%20SDK-Vercel%20Labs-000000?logo=vercel&logoColor=white)](https://github.com/vercel-labs/native)
 [![Zig](https://img.shields.io/badge/Zig-0.16-f7a41d?logo=zig&logoColor=111111)](https://ziglang.org/)
 [![Platform](https://img.shields.io/badge/platform-macOS-111111?logo=apple&logoColor=white)](app.zon)
