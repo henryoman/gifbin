@@ -14,6 +14,11 @@ pub const FitMode = enum {
     contain,
 };
 
+pub const ChromeInsets = struct {
+    leading: f32 = 0,
+    trailing: f32 = 0,
+};
+
 pub const Slide = struct {
     id: u32 = 0,
     path_buffer: [max_path_bytes]u8 = [_]u8{0} ** max_path_bytes,
@@ -62,6 +67,7 @@ pub const Msg = union(enum) {
     width_smaller,
     width_larger,
     sidebar_resized: f32,
+    chrome_changed: ChromeInsets,
 };
 
 pub const Model = struct {
@@ -77,6 +83,8 @@ pub const Model = struct {
     export_count: u32 = 0,
     preview_image_id: u64 = 0,
     preview_slide_id: u32 = 0,
+    chrome_leading: f32 = 0,
+    chrome_trailing: f32 = 0,
     last_error_buffer: [256]u8 = [_]u8{0} ** 256,
     last_error_len: usize = 0,
     pending_action: PendingAction = .none,
@@ -274,6 +282,10 @@ pub fn update(model: *Model, msg: Msg) void {
         .width_smaller => model.output_width = if (model.output_width > 320) model.output_width - 160 else 320,
         .width_larger => model.output_width = @min(model.output_width + 160, 1280),
         .sidebar_resized => |fraction| model.sidebar_split = clamp(fraction, 0.25, 0.6),
+        .chrome_changed => |chrome| {
+            model.chrome_leading = chrome.leading;
+            model.chrome_trailing = chrome.trailing;
+        },
     }
 }
 

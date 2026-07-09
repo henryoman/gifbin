@@ -13,8 +13,10 @@ const canvas = native_sdk.canvas;
 const geometry = native_sdk.geometry;
 
 const canvas_label = "main-canvas";
-const window_width: f32 = 1040;
-const window_height: f32 = 680;
+const window_width: f32 = 1280;
+const window_height: f32 = 820;
+const window_min_width: f32 = 1120;
+const window_min_height: f32 = 760;
 
 const app_permissions = [_][]const u8{ native_sdk.security.permission_command, native_sdk.security.permission_view, native_sdk.security.permission_dialog };
 const preview_image_id: canvas.ImageId = 1;
@@ -35,7 +37,10 @@ const shell_windows = [_]native_sdk.ShellWindow{.{
     .title = "GIFMaker",
     .width = window_width,
     .height = window_height,
+    .min_width = window_min_width,
+    .min_height = window_min_height,
     .restore_state = false,
+    .titlebar = .hidden_inset,
     .views = &shell_views,
 }};
 const shell_scene: native_sdk.ShellConfig = .{ .windows = &shell_windows };
@@ -73,10 +78,19 @@ pub fn appView(ui: *AppUi, model: *const Model) AppUi.Node {
 
 fn appHeader(ui: *AppUi, model: *const Model) AppUi.Node {
     return ui.row(.{ .padding = 12, .gap = 8, .cross = .center, .style_tokens = .{ .background = .surface }, .window_drag = true }, .{
+        ui.el(.stack, .{ .width = model.chrome_leading }, .{}),
         ui.text(.{ .grow = 1, .size = .heading }, "GIFMaker"),
         ui.button(.{ .icon = "plus", .variant = .secondary, .on_press = .add_images }, "Add Images"),
         ui.button(.{ .icon = "download", .variant = .primary, .disabled = model.exportDisabled(), .on_press = .export_gif }, "Export GIF"),
+        ui.el(.stack, .{ .width = model.chrome_trailing }, .{}),
     });
+}
+
+fn onChrome(chrome: native_sdk.WindowChrome) ?Msg {
+    return .{ .chrome_changed = .{
+        .leading = chrome.insets.left,
+        .trailing = chrome.insets.right,
+    } };
 }
 
 fn sidebarView(ui: *AppUi, model: *const Model) AppUi.Node {
@@ -394,6 +408,7 @@ pub fn main(init: std.process.Init) !void {
         .canvas_label = canvas_label,
         .update = update,
         .view = appView,
+        .on_chrome = onChrome,
     });
     defer app_state.destroy();
     app_state.model = initialModel();
