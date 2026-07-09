@@ -13,10 +13,10 @@ const canvas = native_sdk.canvas;
 const geometry = native_sdk.geometry;
 
 const canvas_label = "main-canvas";
-const window_width: f32 = 1280;
-const window_height: f32 = 820;
-const window_min_width: f32 = 1120;
-const window_min_height: f32 = 760;
+const window_width: f32 = 1440;
+const window_height: f32 = 900;
+const window_min_width: f32 = 600;
+const window_min_height: f32 = 600;
 
 const app_permissions = [_][]const u8{ native_sdk.security.permission_command, native_sdk.security.permission_view, native_sdk.security.permission_dialog };
 const preview_image_id: canvas.ImageId = 1;
@@ -408,6 +408,7 @@ pub fn main(init: std.process.Init) !void {
         .canvas_label = canvas_label,
         .update = update,
         .view = appView,
+        .theme = runner.manifestThemePack(),
         .on_chrome = onChrome,
     });
     defer app_state.destroy();
