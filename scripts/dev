@@ -1,0 +1,131 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT_DIR"
+
+APP_NAME="gifmaker"
+CANVAS_LABEL="main-canvas"
+AUTOMATION_DIR=".zig-cache/native-sdk-automation"
+
+PLATFORM="${PLATFORM:-macos}"
+OPTIMIZE="${OPTIMIZE:-Debug}"
+AUTOMATION="${AUTOMATION:-true}"
+TRACE="${TRACE:-off}"
+
+usage() {
+  cat <<'USAGE'
+Usage:
+  ./scripts/dev            Validate, build, and run the dev app in this terminal.
+  ./scripts/dev --smoke    Launch once, assert the canvas renders, then stop it.
+  ./scripts/dev --check    Run the dev preflight checks only.
+
+Environment:
+  TRACE=off|events|runtime|all     default: off
+  AUTOMATION=true|false            default: true
+  PLATFORM=macos|linux|windows     default: macos
+  OPTIMIZE=Debug|ReleaseFast|...   default: Debug
+
+Notes:
+  - The app view is Zig-built so real image previews can use Native SDK image widgets.
+  - Use TRACE=events for verbose SDK event logs when debugging input/runtime issues.
+  - Zig source changes need a restart of this script.
+  - Run this from your terminal; do not double-click zig-out/bin/gifmaker in Finder.
+USAGE
+}
+
+section() {
+  printf '\n==> %s\n' "$1"
+}
+
+require_cmd() {
+  if ! command -v "$1" >/dev/null 2>&1; then
+    printf 'missing required command: %s\n' "$1" >&2
+    exit 127
+  fi
+}
+
+warn_existing_instances() {
+  if command -v pgrep >/dev/null 2>&1 && pgrep -fl "$APP_NAME" >/dev/null 2>&1; then
+    printf 'warning: an existing %s process appears to be running. Close old windows if automation or reloads look stale.\n' "$APP_NAME" >&2
+  fi
+}
+
+preflight() {
+  require_cmd zig
+
+  section "Running Zig tests"
+  zig build test
+}
+
+run_dev() {
+  preflight
+  warn_existing_instances
+
+  section "Starting $APP_NAME dev app"
+  printf 'mode=%s platform=%s automation=%s trace=%s\n' "$OPTIMIZE" "$PLATFORM" "$AUTOMATION" "$TRACE"
+  printf 'edit Zig sources, restart this command after changes; press Ctrl-C to stop\n\n'
+
+  flags=("-Dplatform=$PLATFORM" "-Doptimize=$OPTIMIZE" "-Dautomation=$AUTOMATION" "-Dtrace=$TRACE")
+  exec zig build run "${flags[@]}"
+}
+
+run_smoke() {
+  preflight
+  require_cmd native
+
+  mkdir -p "$AUTOMATION_DIR"
+  rm -f "$AUTOMATION_DIR"/snapshot.txt \
+        "$AUTOMATION_DIR"/windows.txt \
+        "$AUTOMATION_DIR"/accessibility.txt \
+        "$AUTOMATION_DIR"/command.txt \
+        "$AUTOMATION_DIR"/screenshot-"$CANVAS_LABEL".png
+
+  flags=("-Dplatform=$PLATFORM" "-Doptimize=$OPTIMIZE" "-Dautomation=$AUTOMATION" "-Dtrace=$TRACE")
+
+  section "Building smoke app"
+  zig build "${flags[@]}"
+
+  section "Starting smoke app"
+  zig build run "${flags[@]}" > .zig-cache/dev-smoke.log 2>&1 &
+  app_pid=$!
+
+  cleanup() {
+    if kill -0 "$app_pid" >/dev/null 2>&1; then
+      kill "$app_pid" >/dev/null 2>&1 || true
+      wait "$app_pid" >/dev/null 2>&1 || true
+    fi
+  }
+  trap cleanup EXIT INT TERM
+
+  section "Waiting for automation"
+  native automate wait >/dev/null
+
+  section "Asserting rendered canvas"
+  native automate assert \
+    'gpu_nonblank=true' \
+    'role=button name="Add Images"' \
+    'role=button name="Export GIF"'
+
+  native automate screenshot "$CANVAS_LABEL" 1
+  printf '\nsmoke ok\nlog: .zig-cache/dev-smoke.log\nscreenshot: %s/screenshot-%s.png\n' "$AUTOMATION_DIR" "$CANVAS_LABEL"
+}
+
+case "${1:-}" in
+  "" )
+    run_dev
+    ;;
+  "--smoke" )
+    run_smoke
+    ;;
+  "--check" )
+    preflight
+    ;;
+  "-h"|"--help" )
+    usage
+    ;;
+  * )
+    usage >&2
+    exit 2
+    ;;
+esac

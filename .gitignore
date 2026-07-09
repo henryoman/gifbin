@@ -1,0 +1,31 @@
+# Zig build outputs
+.zig-cache/
+zig-cache/
+zig-out/
+
+# Native SDK automation/runtime artifacts
+.native/
+.zig-cache/native-sdk-automation/
+*.log
+
+# Local agent/editor/tooling state
+.agents/
+.codex/
+.vscode/
+.idea/
+
+# macOS/filesystem noise
+.DS_Store
+._*
+
+# Local environment/secrets
+.env
+.env.*
+!.env.example
+
+# App/package outputs
+*.app/
+*.dmg
+*.pkg
+*.zip
+*.tar.gz
