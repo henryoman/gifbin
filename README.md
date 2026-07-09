@@ -4,12 +4,10 @@
   <img src="assets/gifbin.png" alt="GIFMaker banner powered by Native SDK" width="720">
 </p>
 
-[![Built with Native SDK](https://img.shields.io/badge/Native%20SDK-Vercel%20Labs-000000?logo=vercel&logoColor=white)](https://github.com/vercel-labs/native)
-[![Zig](https://img.shields.io/badge/Zig-0.16-f7a41d?logo=zig&logoColor=111111)](https://ziglang.org/)
-[![Platform](https://img.shields.io/badge/platform-macOS-111111?logo=apple&logoColor=white)](app.zon)
-[![UI](https://img.shields.io/badge/UI-native%20GPU%20surface-35c2ff)](src/main.zig)
-[![GIF encoder](https://img.shields.io/badge/GIF-msf__gif%202.4-8a63d2)](third_party/msf_gif/msf_gif.h)
-[![No WebView](https://img.shields.io/badge/WebView-not%20used-25a244)](app.zon)
+[![Native SDK](https://img.shields.io/badge/powered%20by-Native%20SDK-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://github.com/vercel-labs/native)
+[![Zig](https://img.shields.io/badge/Zig-0.16-f7a41d?style=for-the-badge&logo=zig&logoColor=111111)](https://ziglang.org/)
+[![macOS](https://img.shields.io/badge/platform-macOS-111111?style=for-the-badge&logo=apple&logoColor=white)](app.zon)
+[![Native GPU UI](https://img.shields.io/badge/UI-Native%20GPU%20Canvas-35c2ff?style=for-the-badge)](src/main.zig)
 
 GIFMaker is a small native desktop app for turning PNG/JPEG image frames into an
 animated GIF. It is built with the Vercel Labs Native SDK and Zig: the window,
