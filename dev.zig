@@ -110,7 +110,7 @@ fn parseCommand(value: []const u8) ?Command {
 
 fn menu(io: std.Io) !Options {
     std.debug.print(
-        \\GIFMaker dev
+        \\gifbin dev
         \\
         \\  1. Run app (recommended: zig build dev path)
         \\  2. Run via native dev (SDK CLI path)
@@ -216,7 +216,7 @@ fn spawnAndExit(io: std.Io, argv: []const []const u8) !void {
 
 fn usage() void {
     std.debug.print(
-        \\GIFMaker dev runner
+        \\gifbin dev runner
         \\
         \\Usage:
         \\  zig run dev.zig -- <command> [options]

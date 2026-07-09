@@ -24,6 +24,7 @@ zig-out/
 !.env.example
 
 # App/package outputs
+dist/
 *.app/
 *.dmg
 *.pkg

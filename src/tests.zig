@@ -57,7 +57,7 @@ fn findButtonByIcon(widget: canvas.Widget, icon: []const u8) ?canvas.Widget {
     return null;
 }
 
-test "clicking app controls drives gifmaker state through typed dispatch" {
+test "clicking app controls drives gifbin state through typed dispatch" {
     var arena_state = std.heap.ArenaAllocator.init(testing.allocator);
     defer arena_state.deinit();
     const arena = arena_state.allocator();

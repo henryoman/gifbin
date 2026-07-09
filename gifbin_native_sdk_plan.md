@@ -1,11 +1,11 @@
-# GIFMaker: Native SDK + Zig Implementation Plan
+# gifbin: Native SDK + Zig Implementation Plan
 
 This is the straight-up easiest plan for the project.
 
 The app we are building:
 
 ```txt
-GIFMaker
+gifbin
 
 Drop images in.
 Reorder them.
@@ -43,8 +43,8 @@ Run this first:
 npm install -g @native-sdk/cli
 native version
 
-native init gifmaker --full
-cd gifmaker
+native init gifbin --full
+cd gifbin
 
 native dev
 ```
@@ -113,8 +113,8 @@ native dev
 npm install -g @native-sdk/cli
 native version
 
-native init gifmaker --full
-cd gifmaker
+native init gifbin --full
+cd gifbin
 
 native dev
 ```
@@ -297,7 +297,7 @@ CPU image resize/composite/export is simpler and good enough.
 Use this layout:
 
 ```txt
-gifmaker/
+gifbin/
   app.zon
   build.zig
   build.zig.zon
@@ -471,7 +471,7 @@ Use one simple two-pane native app.
 
 ```txt
 ┌──────────────────────────────────────────────────────────────────┐
-│ GIFMaker                                    Add Images  Export GIF│
+│ gifbin                                    Add Images  Export GIF│
 ├──────────────────────────────┬───────────────────────────────────┤
 │ Slides                       │ Preview                           │
 │                              │                                   │
@@ -566,7 +566,7 @@ and adjust names to match.
 ```xml
 <column gap="0" grow="1">
   <row padding="12" gap="8" cross="center" background="surface" window-drag="true">
-    <text weight="bold" grow="1">GIFMaker</text>
+    <text weight="bold" grow="1">gifbin</text>
     <button variant="secondary" on-press="add_images">Add Images</button>
     <button variant="primary" disabled="{export_disabled}" on-press="export_gif">Export GIF</button>
   </row>
@@ -1457,8 +1457,8 @@ Commands:
 
 ```bash
 npm install -g @native-sdk/cli
-native init gifmaker --full
-cd gifmaker
+native init gifbin --full
+cd gifbin
 native dev
 native check
 native test
@@ -1615,7 +1615,7 @@ project files/workspaces
 Reason:
 
 ```txt
-Those turn a simple GIF maker into a media editor.
+Those turn a simple gifbin into a media editor.
 The MVP is image slides -> ordered animated GIF.
 ```
 

@@ -1,6 +1,6 @@
 # Agent Notes
 
-This project is a Native SDK desktop app named `gifmaker`.
+This project is a Native SDK desktop app named `gifbin`.
 
 Native SDK is a new native desktop toolkit from Vercel. The default app model is
 native-rendered. This app uses a Zig-built Native SDK canvas UI so the preview

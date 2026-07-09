@@ -1,7 +1,7 @@
-# GIFMaker
+# gifbin
 
 <p align="center">
-  <img src="assets/gifbin.png" alt="GIFMaker banner powered by Native SDK" width="420">
+  <img src="assets/gifbin.png" alt="gifbin banner powered by Native SDK" width="420">
 </p>
 
 <p align="center">
@@ -11,12 +11,12 @@
   <a href="src/main.zig"><img alt="Native GPU UI" src="https://img.shields.io/badge/UI-Native%20GPU%20Canvas-35c2ff?style=for-the-badge"></a>
 </p>
 
-GIFMaker is a small native desktop app for turning PNG/JPEG image frames into an
+gifbin is a small native desktop app for turning PNG/JPEG image frames into an
 animated GIF. It uses a Native SDK GPU canvas surface and Zig for the app model,
 dialogs, drag/drop, preview registration, and GIF export.
 
 <p align="center">
-  <img src="assets/gifbin-ui.png" alt="GIFMaker desktop interface with slide controls and preview canvas" width="960">
+  <img src="assets/gifbin-ui.png" alt="gifbin desktop interface with slide controls and preview canvas" width="960">
 </p>
 
 ## Native SDK
@@ -118,6 +118,28 @@ TRACE=events zig build dev
 
 Zig source changes need a restart of the dev runner.
 
+## Releases
+
+The repository starts at version `0.0.0`. GitHub releases are automated from
+SemVer tags:
+
+```sh
+git tag v0.0.0
+git push origin v0.0.0
+```
+
+Pushing a `vX.Y.Z` tag runs `.github/workflows/release.yml`, stamps that version
+into the Native SDK manifests for the release build, validates the app, builds a
+ReleaseSafe macOS binary, packages `zig-out/package/gifbin.app`, zips it, and
+publishes the zip plus a SHA-256 checksum to the GitHub release.
+
+For local packaging, use the direct Native SDK CLI path:
+
+```sh
+zig build -Doptimize=ReleaseSafe
+native package --target macos --manifest app.zon --binary zig-out/bin/gifbin
+```
+
 ## Native SDK CLI
 
 The repo also keeps the official Native SDK CLI path available:
@@ -137,7 +159,7 @@ For this app, `zig run dev.zig -- run` is usually cleaner because the repo owns
 
 ## Development Notes
 
-Do not double-click `zig-out/bin/gifmaker` in Finder during development. macOS
+Do not double-click `zig-out/bin/gifbin` in Finder during development. macOS
 treats it as a Unix executable and may open it in a separate Terminal app. Use
 the project runner instead:
 

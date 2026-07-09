@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+native_sdk_path="${1:-}"
+
+if [[ -z "$native_sdk_path" ]]; then
+  if ! command -v bun >/dev/null 2>&1; then
+    printf 'missing bun; pass the Native SDK package path explicitly\n' >&2
+    exit 127
+  fi
+
+  bun_global_bin="$(bun pm bin -g)"
+  native_sdk_path="${bun_global_bin%/bin}/install/global/node_modules/@native-sdk/cli"
+fi
+
+if [[ ! -f "$native_sdk_path/build.zig.zon" ]]; then
+  printf 'Native SDK package not found at: %s\n' "$native_sdk_path" >&2
+  exit 1
+fi
+
+native_sdk_path="$(ruby -rpathname -e 'puts Pathname.new(ARGV[0]).realpath.relative_path_from(Pathname.new(Dir.pwd).realpath)' "$native_sdk_path")"
+
+NATIVE_SDK_PATH="$native_sdk_path" perl -0pi -e 's#(\.native_sdk = \.\{ \.path = ")[^"]+(" \},)#$1$ENV{NATIVE_SDK_PATH}$2#' build.zig.zon
+
+printf 'configured Native SDK path: %s\n' "$native_sdk_path"

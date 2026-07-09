@@ -3,7 +3,7 @@ const native_sdk = @import("native_sdk");
 
 pub fn build(b: *std.Build) void {
     const native_dep = b.dependency("native_sdk", .{});
-    const artifacts = native_sdk.addAppArtifacts(b, native_dep, .{ .name = "gifmaker" });
+    const artifacts = native_sdk.addAppArtifacts(b, native_dep, .{ .name = "gifbin" });
 
     artifacts.exe.root_module.addIncludePath(b.path("third_party/msf_gif"));
     artifacts.exe.root_module.addCSourceFile(.{

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+version="${1:-}"
+version="${version#v}"
+
+if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+  printf 'usage: %s <major.minor.patch>\n' "$0" >&2
+  exit 2
+fi
+
+VERSION="$version" perl -0pi -e 's/(\.version = ")[^"]+(")/$1$ENV{VERSION}$2/g' app.zon build.zig.zon
+
+printf 'set version to %s\n' "$version"

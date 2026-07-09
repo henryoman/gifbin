@@ -4,7 +4,7 @@ set -Eeuo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
-APP_NAME="gifmaker"
+APP_NAME="gifbin"
 CANVAS_LABEL="main-canvas"
 AUTOMATION_DIR=".zig-cache/native-sdk-automation"
 
@@ -30,7 +30,7 @@ Notes:
   - The app view is Zig-built so real image previews can use Native SDK image widgets.
   - Use TRACE=events for verbose SDK event logs when debugging input/runtime issues.
   - Zig source changes need a restart of this script.
-  - Run this from your terminal; do not double-click zig-out/bin/gifmaker in Finder.
+  - Run this from your terminal; do not double-click zig-out/bin/gifbin in Finder.
 USAGE
 }
 

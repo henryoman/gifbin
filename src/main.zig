@@ -1,4 +1,4 @@
-//! Gifmaker native app wiring. The view, app state, and native operations
+//! Gifbin native app wiring. The view, app state, and native operations
 //! live in Zig so the preview can use runtime-registered canvas images.
 
 const std = @import("std");
@@ -32,11 +32,11 @@ const ImageInfo = struct {
 extern fn gifbin_read_image_info(path: [*:0]const u8, out_width: *c_int, out_height: *c_int) c_int;
 extern fn gifbin_decode_image_rgba(path: [*:0]const u8, width: c_int, height: c_int, out_rgba: [*]u8) c_int;
 const shell_views = [_]native_sdk.ShellView{
-    .{ .label = canvas_label, .kind = .gpu_surface, .fill = true, .role = "GIF maker canvas", .accessibility_label = "GIF maker", .gpu_backend = .metal, .gpu_pixel_format = .bgra8_unorm, .gpu_present_mode = .timer, .gpu_alpha_mode = .@"opaque", .gpu_color_space = .srgb, .gpu_vsync = true },
+    .{ .label = canvas_label, .kind = .gpu_surface, .fill = true, .role = "gifbin canvas", .accessibility_label = "gifbin", .gpu_backend = .metal, .gpu_pixel_format = .bgra8_unorm, .gpu_present_mode = .timer, .gpu_alpha_mode = .@"opaque", .gpu_color_space = .srgb, .gpu_vsync = true },
 };
 const shell_windows = [_]native_sdk.ShellWindow{.{
     .label = "main",
-    .title = "GIFMaker",
+    .title = "gifbin",
     .width = window_width,
     .height = window_height,
     .min_width = window_min_width,
@@ -215,14 +215,14 @@ fn controlsView(ui: *AppUi, model: *const Model) AppUi.Node {
 
 // -------------------------------------------------------------------- app
 
-const GifmakerApp = native_sdk.UiApp(Model, Msg);
+const GifbinApp = native_sdk.UiApp(Model, Msg);
 const image_filters = [_]native_sdk.platform.FileFilter{.{
     .name = "Images",
     .extensions = &.{ "png", "jpg", "jpeg" },
 }};
 
 const ShellApp = struct {
-    ui: *GifmakerApp,
+    ui: *GifbinApp,
 
     fn app(self: *ShellApp) native_sdk.App {
         const inner = self.ui.app();
@@ -239,7 +239,7 @@ const ShellApp = struct {
     }
 
     fn eventFn(context: *anyopaque, runtime: *native_sdk.Runtime, event_value: native_sdk.Event) anyerror!void {
-        const ui: *GifmakerApp = @ptrCast(@alignCast(context));
+        const ui: *GifbinApp = @ptrCast(@alignCast(context));
         const logo_changed = ensureLogoImage(ui, runtime);
         switch (event_value) {
             .files_dropped => |drop| {
@@ -259,14 +259,14 @@ const ShellApp = struct {
         }
     }
 
-    fn ensureLogoImage(ui: *GifmakerApp, runtime: *native_sdk.Runtime) bool {
+    fn ensureLogoImage(ui: *GifbinApp, runtime: *native_sdk.Runtime) bool {
         if (ui.model.logo_image_id == logo_image_id) return false;
         _ = runtime.registerCanvasImageBytes(logo_image_id, logo_image_bytes) catch return false;
         ui.model.logo_image_id = logo_image_id;
         return true;
     }
 
-    fn handlePending(ui: *GifmakerApp, runtime: *native_sdk.Runtime) !void {
+    fn handlePending(ui: *GifbinApp, runtime: *native_sdk.Runtime) !void {
         switch (gif_model.consumePendingAction(&ui.model)) {
             .none => {},
             .open_images => try openImages(ui, runtime),
@@ -274,7 +274,7 @@ const ShellApp = struct {
         }
     }
 
-    fn openImages(ui: *GifmakerApp, runtime: *native_sdk.Runtime) !void {
+    fn openImages(ui: *GifbinApp, runtime: *native_sdk.Runtime) !void {
         var dialog_buffer: [native_sdk.platform.max_dialog_paths_bytes]u8 = undefined;
         const result = runtime.showOpenDialog(.{
             .title = "Add Images",
@@ -292,7 +292,7 @@ const ShellApp = struct {
         try ui.rebuild(runtime, ui.canvas_window_id);
     }
 
-    fn exportGif(ui: *GifmakerApp, runtime: *native_sdk.Runtime) !void {
+    fn exportGif(ui: *GifbinApp, runtime: *native_sdk.Runtime) !void {
         var dialog_buffer: [native_sdk.platform.max_dialog_path_bytes]u8 = undefined;
         const output_path = (runtime.showSaveDialog(.{
             .title = "Export GIF",
@@ -319,7 +319,7 @@ const ShellApp = struct {
         try ui.rebuild(runtime, ui.canvas_window_id);
     }
 
-    fn syncPreview(ui: *GifmakerApp, runtime: *native_sdk.Runtime) !bool {
+    fn syncPreview(ui: *GifbinApp, runtime: *native_sdk.Runtime) !bool {
         const selected = ui.model.selectedSlide() orelse {
             if (ui.model.preview_image_id != 0) _ = runtime.unregisterCanvasImage(ui.model.preview_image_id);
             const changed = ui.model.preview_image_id != 0 or ui.model.preview_slide_id != 0;
@@ -427,8 +427,8 @@ pub fn main(init: std.process.Init) !void {
     // heap-allocates and constructs everything in place, so neither
     // ever rides the stack. Mutate `app_state.model` through the
     // pointer before running if boot state is not the default.
-    const app_state = try GifmakerApp.create(std.heap.page_allocator, .{
-        .name = "gifmaker",
+    const app_state = try GifbinApp.create(std.heap.page_allocator, .{
+        .name = "gifbin",
         .scene = shell_scene,
         .canvas_label = canvas_label,
         .update = update,
@@ -442,9 +442,9 @@ pub fn main(init: std.process.Init) !void {
     var shell = ShellApp{ .ui = app_state };
 
     try runner.runWithOptions(shell.app(), .{
-        .app_name = "gifmaker",
-        .window_title = "GIFMaker",
-        .bundle_id = "dev.native_sdk.gifmaker",
+        .app_name = "gifbin",
+        .window_title = "gifbin",
+        .bundle_id = "dev.native_sdk.gifbin",
         .icon_path = "assets/icon.png",
         .default_frame = geometry.RectF.init(0, 0, window_width, window_height),
         .restore_state = false,
