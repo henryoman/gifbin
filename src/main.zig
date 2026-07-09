@@ -19,8 +19,10 @@ const window_min_width: f32 = 600;
 const window_min_height: f32 = 600;
 
 const app_permissions = [_][]const u8{ native_sdk.security.permission_command, native_sdk.security.permission_view, native_sdk.security.permission_dialog };
+const logo_image_id: canvas.ImageId = 2;
 const preview_image_id: canvas.ImageId = 1;
 const preview_max_side: u16 = 512;
+const logo_image_bytes = @embedFile("gifbin-logo.png");
 
 const ImageInfo = struct {
     width: u16,
@@ -79,11 +81,26 @@ pub fn appView(ui: *AppUi, model: *const Model) AppUi.Node {
 fn appHeader(ui: *AppUi, model: *const Model) AppUi.Node {
     return ui.row(.{ .padding = 12, .gap = 8, .cross = .center, .style_tokens = .{ .background = .surface }, .window_drag = true }, .{
         ui.el(.stack, .{ .width = model.chrome_leading }, .{}),
-        ui.text(.{ .grow = 1, .size = .heading }, "GIFMaker"),
+        appLogo(ui, model),
+        ui.spacer(1),
         ui.button(.{ .icon = "plus", .variant = .secondary, .on_press = .add_images }, "Add Images"),
         ui.button(.{ .icon = "download", .variant = .primary, .disabled = model.exportDisabled(), .on_press = .export_gif }, "Export GIF"),
         ui.el(.stack, .{ .width = model.chrome_trailing }, .{}),
     });
+}
+
+fn appLogo(ui: *AppUi, model: *const Model) AppUi.Node {
+    if (model.logo_image_id != 0) {
+        var logo = ui.image(.{
+            .image = model.logo_image_id,
+            .width = 124,
+            .height = 49,
+            .semantics = .{ .role = .image, .label = "gifbin" },
+        });
+        logo.widget.image_fit = .contain;
+        return logo;
+    }
+    return ui.text(.{ .size = .heading }, "gifbin");
 }
 
 fn onChrome(chrome: native_sdk.WindowChrome) ?Msg {
@@ -223,6 +240,7 @@ const ShellApp = struct {
 
     fn eventFn(context: *anyopaque, runtime: *native_sdk.Runtime, event_value: native_sdk.Event) anyerror!void {
         const ui: *GifmakerApp = @ptrCast(@alignCast(context));
+        const logo_changed = ensureLogoImage(ui, runtime);
         switch (event_value) {
             .files_dropped => |drop| {
                 for (drop.paths) |path| {
@@ -234,11 +252,18 @@ const ShellApp = struct {
             else => {
                 try ui.app().event(runtime, event_value);
                 try handlePending(ui, runtime);
-                if (try syncPreview(ui, runtime)) {
+                if (logo_changed or try syncPreview(ui, runtime)) {
                     if (ui.installed) try ui.rebuild(runtime, ui.canvas_window_id);
                 }
             },
         }
+    }
+
+    fn ensureLogoImage(ui: *GifmakerApp, runtime: *native_sdk.Runtime) bool {
+        if (ui.model.logo_image_id == logo_image_id) return false;
+        _ = runtime.registerCanvasImageBytes(logo_image_id, logo_image_bytes) catch return false;
+        ui.model.logo_image_id = logo_image_id;
+        return true;
     }
 
     fn handlePending(ui: *GifmakerApp, runtime: *native_sdk.Runtime) !void {

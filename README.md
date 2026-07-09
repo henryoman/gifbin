@@ -1,23 +1,23 @@
 # GIFMaker
 
 <p align="center">
-  <img src="assets/gifbin.png" alt="GIFMaker banner powered by Native SDK" width="720">
+  <img src="assets/gifbin.png" alt="GIFMaker banner powered by Native SDK" width="420">
 </p>
 
-[![Native SDK](https://img.shields.io/badge/powered%20by-Native%20SDK-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://github.com/vercel-labs/native)
-[![Zig](https://img.shields.io/badge/Zig-0.16-f7a41d?style=for-the-badge&logo=zig&logoColor=111111)](https://ziglang.org/)
-[![macOS](https://img.shields.io/badge/platform-macOS-111111?style=for-the-badge&logo=apple&logoColor=white)](app.zon)
-[![Native GPU UI](https://img.shields.io/badge/UI-Native%20GPU%20Canvas-35c2ff?style=for-the-badge)](src/main.zig)
+<p align="center">
+  <a href="https://github.com/vercel-labs/native"><img alt="Native SDK" src="https://img.shields.io/badge/powered%20by-Native%20SDK-000000?style=for-the-badge&logo=vercel&logoColor=white"></a>
+  <a href="https://ziglang.org/"><img alt="Zig 0.16" src="https://img.shields.io/badge/Zig-0.16-f7a41d?style=for-the-badge&logo=zig&logoColor=111111"></a>
+  <a href="app.zon"><img alt="macOS" src="https://img.shields.io/badge/platform-macOS-111111?style=for-the-badge&logo=apple&logoColor=white"></a>
+  <a href="src/main.zig"><img alt="Native GPU UI" src="https://img.shields.io/badge/UI-Native%20GPU%20Canvas-35c2ff?style=for-the-badge"></a>
+</p>
 
 GIFMaker is a small native desktop app for turning PNG/JPEG image frames into an
-animated GIF. It is built with the Vercel Labs Native SDK and Zig: the window,
-controls, preview, dialogs, app model, export path, and dev runner all live in
-this repository as native code.
+animated GIF. It uses a Native SDK GPU canvas surface and Zig for the app model,
+dialogs, drag/drop, preview registration, and GIF export.
 
-This is not an Electron app, not a web frontend, and not a WebView shell. The
-app uses a Native SDK GPU surface and Native SDK canvas widgets for the UI, with
-Zig handling state updates, drag/drop, native file dialogs, preview image
-registration, and GIF export.
+<p align="center">
+  <img src="assets/gifbin-ui.png" alt="GIFMaker desktop interface with slide controls and preview canvas" width="960">
+</p>
 
 ## Native SDK
 

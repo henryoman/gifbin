@@ -41,6 +41,14 @@ fn findByKind(widget: canvas.Widget, kind: canvas.WidgetKind) ?canvas.Widget {
     return null;
 }
 
+fn findByImageId(widget: canvas.Widget, image_id: canvas.ImageId) ?canvas.Widget {
+    if (widget.kind == .image and widget.image_id == image_id) return widget;
+    for (widget.children) |child| {
+        if (findByImageId(child, image_id)) |found| return found;
+    }
+    return null;
+}
+
 fn findButtonByIcon(widget: canvas.Widget, icon: []const u8) ?canvas.Widget {
     if (widget.kind == .button and std.mem.eql(u8, widget.icon, icon)) return widget;
     for (widget.children) |child| {
@@ -55,9 +63,10 @@ test "clicking app controls drives gifmaker state through typed dispatch" {
     const arena = arena_state.allocator();
 
     var model = main.initialModel();
+    model.logo_image_id = 2;
 
     var tree = try buildTree(arena, &model);
-    _ = try expectByText(tree.root, .text, "GIFMaker");
+    _ = findByImageId(tree.root, model.logo_image_id) orelse return error.WidgetNotFound;
     _ = try expectByText(tree.root, .status_bar, "0 slides - ready for PNG or JPEG frames");
 
     const add = try expectByText(tree.root, .button, "Add Images");
