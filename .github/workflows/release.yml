@@ -34,7 +34,7 @@ jobs:
           bun-version: 1.3.14
 
       - name: Install Native SDK CLI
-        run: bun add -g @native-sdk/cli@0.4.1
+        run: bun add -g @native-sdk/cli@0.4.3
 
       - name: Configure release version
         run: |

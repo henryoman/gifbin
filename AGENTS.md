@@ -27,7 +27,7 @@ canvas/native UI surface.
 This repo currently targets:
 
 - Zig `0.16.0`
-- `@native-sdk/cli` / `native` `0.4.1`
+- `@native-sdk/cli` / `native` `0.4.3`
 - Bun `1.3.14`
 
 Check versions with:
