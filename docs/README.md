@@ -1,14 +1,15 @@
 # Native SDK Source Docs Snapshot
 
 This folder contains a local snapshot of the Native SDK documentation source
-from `vercel-labs/native` v0.4.3, refreshed on 2026-07-10 for this project.
+from `vercel-labs/native` v0.4.4, refreshed on 2026-07-11 for this project.
 
 Use these files together with the installed Native SDK agent skills:
 
 ```sh
-native skills get core --full
-native skills get native-ui
-native skills get automation
+./scripts/native-skills get core --full
+./scripts/native-skills get native-ui
+./scripts/native-skills get automation
+./scripts/native-skills get zig
 ```
 
 The downloaded docs are source `.mdx` and `.md` files, not rendered website
@@ -43,10 +44,13 @@ HTML. Search them with `rg`.
   and lifecycle.
 - `native-sdk-source/docs/src/app/security/page.mdx`: permissions, navigation
   policy, bridge policy, and trust boundaries.
+- `native-sdk-source/docs/src/app/zig/page.mdx`: Zig 0.16 migration notes and
+  current standard-library patterns used by Native SDK apps.
 - `native-sdk-source/skill-data/native-ui/SKILL.md`: installed agent-facing
   Native UI guide source.
 - `native-sdk-source/skill-data/core/SKILL.md`: installed agent-facing core
   guide source.
+- `native-sdk-source/skill-data/zig/SKILL.md`: installed Zig 0.16 guide source.
 
 ## Hidden Titlebar Checklist
 

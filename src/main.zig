@@ -451,7 +451,6 @@ pub fn main(init: std.process.Init) !void {
         .js_window_api = false,
         .security = .{
             .permissions = &app_permissions,
-            .navigation = .{ .allowed_origins = &.{ "zero://inline", "zero://app" } },
         },
     }, init);
 }

@@ -10,19 +10,19 @@ AUTOMATION_DIR=".zig-cache/native-sdk-automation"
 
 PLATFORM="${PLATFORM:-macos}"
 OPTIMIZE="${OPTIMIZE:-Debug}"
-AUTOMATION="${AUTOMATION:-true}"
+AUTOMATION="${AUTOMATION:-false}"
 TRACE="${TRACE:-off}"
 
 usage() {
   cat <<'USAGE'
 Usage:
-  ./scripts/dev            Validate, build, and run the dev app in this terminal.
+  ./scripts/dev            Build and run the dev app in this terminal.
   ./scripts/dev --smoke    Launch once, assert the canvas renders, then stop it.
   ./scripts/dev --check    Run the dev preflight checks only.
 
 Environment:
   TRACE=off|events|runtime|all     default: off
-  AUTOMATION=true|false            default: true
+  AUTOMATION=true|false            default: false (smoke forces true)
   PLATFORM=macos|linux|windows     default: macos
   OPTIMIZE=Debug|ReleaseFast|...   default: Debug
 
@@ -53,13 +53,17 @@ warn_existing_instances() {
 
 preflight() {
   require_cmd zig
+  require_cmd native
+
+  section "Checking Native SDK project shape"
+  native check .
 
   section "Running Zig tests"
   zig build test
 }
 
 run_dev() {
-  preflight
+  require_cmd zig
   warn_existing_instances
 
   section "Starting $APP_NAME dev app"
@@ -72,7 +76,7 @@ run_dev() {
 
 run_smoke() {
   preflight
-  require_cmd native
+  AUTOMATION=true
 
   mkdir -p "$AUTOMATION_DIR"
   rm -f "$AUTOMATION_DIR"/snapshot.txt \

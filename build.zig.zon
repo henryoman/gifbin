@@ -1,7 +1,7 @@
 .{
     .name = .gifbin,
     .fingerprint = 0x7b3aa05d322d51a1,
-    .version = "0.0.0",
+    .version = "0.0.2",
     .minimum_zig_version = "0.16.0",
     .dependencies = .{
         .native_sdk = .{ .path = "../../../../Users/henryoman/.bun/install/global/node_modules/@native-sdk/cli" },

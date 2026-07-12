@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+repo_root="$(cd "$(dirname "$0")/.." && pwd)"
+sdk_root="$(ruby -e '
+  zon = File.read(File.join(ARGV.fetch(0), "build.zig.zon"))
+  match = zon.match(/\.native_sdk\s*=\s*\.\{\s*\.path\s*=\s*"([^"]+)"/)
+  abort "native_sdk path not found in build.zig.zon" unless match
+  puts File.expand_path(match[1], ARGV.fetch(0))
+' "$repo_root")"
+
+if [[ ! -d "$sdk_root/skill-data" ]]; then
+  printf 'Native SDK skills not found at: %s\n' "$sdk_root" >&2
+  exit 1
+fi
+
+export NATIVE_SDK_SKILLS_ROOT="$sdk_root"
+exec native skills "$@"

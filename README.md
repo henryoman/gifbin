@@ -54,6 +54,12 @@ and the runtime path disables the JavaScript window API:
 .js_window_api = false,
 ```
 
+The manifest also explicitly excludes the WebView layer:
+
+```zig
+.webview_layer = "exclude",
+```
+
 That is the core point of the project: a native-rendered GIF tool, written in
 Zig, using Native SDK as the desktop runtime.
 
@@ -91,10 +97,10 @@ Zig, using Native SDK as the desktop runtime.
 ```sh
 zig run dev.zig                        # tiny interactive project CLI
 zig run dev.zig -- help                # CLI commands and options
-zig run dev.zig -- run                 # dev run: checks, Debug build, quiet logs
+zig run dev.zig -- run                 # fast dev run: Debug build, quiet logs
 zig run dev.zig -- native              # official Native SDK CLI path: native dev .
 zig run dev.zig -- smoke               # launch, assert the canvas renders, stop
-zig run dev.zig -- check               # run app Zig tests
+zig run dev.zig -- check               # run Native SDK checks and app Zig tests
 
 zig build dev                          # short alias for the dev run
 zig build dev-smoke                    # short alias for smoke verification
@@ -104,9 +110,10 @@ zig build                              # build the app binary
 ```
 
 `zig run dev.zig -- run` is the recommended development path for this repo. It
-runs the local checks, builds the app in Debug mode, enables Native SDK
-automation, and keeps event tracing off by default. Build errors, panics, and
-app stderr still print in the terminal.
+builds the app in Debug mode without rerunning the full test suite and keeps
+automation and event tracing off by default. Build errors, panics, and app
+stderr still print in the terminal. Use `zig run dev.zig -- check` for the full
+preflight and `zig run dev.zig -- smoke` for an automation-enabled launch.
 
 Use verbose tracing only when debugging low-level Native SDK runtime/input
 events:
@@ -120,12 +127,12 @@ Zig source changes need a restart of the dev runner.
 
 ## Releases
 
-The repository starts at version `0.0.0`. GitHub releases are automated from
-SemVer tags:
+GitHub releases are automated from SemVer tags:
 
 ```sh
-git tag v0.0.0
-git push origin v0.0.0
+version=0.0.3
+git tag "v${version}"
+git push origin "v${version}"
 ```
 
 Pushing a `vX.Y.Z` tag runs `.github/workflows/release.yml`, stamps that version
@@ -167,11 +174,12 @@ the project runner instead:
 ./scripts/dev
 ```
 
-The Native SDK dependency is local in `build.zig.zon`:
+The Native SDK dependency is a local path in `build.zig.zon`. Reconfigure it
+after installing or moving the SDK:
 
-```zig
-.native_sdk = .{ .path = "../../../../../Users/henryoman/.bun/install/global/node_modules/@native-sdk/cli" },
+```sh
+./scripts/configure-native-sdk-path
 ```
 
-Edit `.dependencies.native_sdk.path` in `build.zig.zon` if you move this app or
-the Native SDK checkout.
+Pass an explicit SDK checkout path to that script when it is not installed
+through Bun. Use `./scripts/native-skills` for the matching SDK guidance.

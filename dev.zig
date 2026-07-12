@@ -16,7 +16,7 @@ const Options = struct {
     trace: []const u8 = "off",
     platform: []const u8 = "macos",
     optimize: []const u8 = "Debug",
-    automation: []const u8 = "true",
+    automation: []const u8 = "false",
 };
 
 pub fn main(init: std.process.Init) !void {
@@ -222,9 +222,9 @@ fn usage() void {
         \\  zig run dev.zig -- <command> [options]
         \\
         \\Commands:
-        \\  run       Run the Debug dev app with terminal logs
+        \\  run       Run the Debug dev app with terminal logs (no preflight)
         \\  native    Run through the Native SDK CLI: native dev .
-        \\  check     Run the app's Zig tests
+        \\  check     Run Native SDK checks and the app's Zig tests
         \\  smoke     Launch, assert rendered UI, screenshot, then stop
         \\  build     Run zig build
         \\  test      Run zig build test
@@ -238,7 +238,8 @@ fn usage() void {
         \\  --platform <platform>      macos, linux, windows (default: macos)
         \\  --optimize <mode>          Debug, ReleaseFast, ReleaseSafe, ReleaseSmall
         \\  --release                  Shortcut for --optimize ReleaseFast
-        \\  --no-automation            Disable Native SDK automation
+        \\  --automation               Enable Native SDK automation (smoke always enables it)
+        \\  --no-automation            Disable Native SDK automation (default)
         \\
         \\Examples:
         \\  zig run dev.zig

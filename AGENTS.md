@@ -27,8 +27,8 @@ canvas/native UI surface.
 This repo currently targets:
 
 - Zig `0.16.0`
-- `@native-sdk/cli` / `native` `0.4.3`
-- Bun `1.3.14`
+- `@native-sdk/cli` / `native` `0.4.4`
+- Bun `1.3.14` (release/tooling only)
 
 Check versions with:
 
@@ -43,9 +43,10 @@ bun --version
 Before changing Native SDK code, read the installed skills and the local docs:
 
 ```sh
-native skills get core --full
-native skills get native-ui
-native skills get automation
+./scripts/native-skills get core --full
+./scripts/native-skills get native-ui
+./scripts/native-skills get automation
+./scripts/native-skills get zig
 ```
 
 Useful downloaded docs:
@@ -60,8 +61,10 @@ Useful downloaded docs:
 - `docs/native-sdk-source/docs/src/app/packaging/page.mdx`
 - `docs/native-sdk-source/docs/src/app/runtime/page.mdx`
 - `docs/native-sdk-source/docs/src/app/security/page.mdx`
+- `docs/native-sdk-source/docs/src/app/zig/page.mdx`
 - `docs/native-sdk-source/skill-data/native-ui/SKILL.md`
 - `docs/native-sdk-source/skill-data/core/SKILL.md`
+- `docs/native-sdk-source/skill-data/zig/SKILL.md`
 
 ## Editing Rules
 

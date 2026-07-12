@@ -3,12 +3,13 @@
     .name = "gifbin",
     .display_name = "gifbin",
     .description = "A native desktop tool for arranging image frames and exporting GIFs.",
-    .version = "0.0.0",
+    .version = "0.0.2",
     .theme = "geist",
     .icons = .{"assets/icon.png"},
     .platforms = .{"macos"},
     .permissions = .{ "view", "command" },
     .capabilities = .{ "native_views", "gpu_surfaces" },
+    .webview_layer = "exclude",
     .shell = .{
         .windows = .{
             .{
@@ -27,12 +28,4 @@
             },
         },
     },
-    .security = .{
-        .navigation = .{
-            .allowed_origins = .{ "zero://app", "zero://inline" },
-            .external_links = .{ .action = "deny" },
-        },
-    },
-    .web_engine = "system",
-    .cef = .{ .dir = "third_party/cef/macos", .auto_install = false },
 }
