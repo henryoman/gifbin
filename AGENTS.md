@@ -128,3 +128,19 @@ zig build run -Dplatform=macos -Dautomation=true
 native automate wait
 native automate snapshot
 ```
+
+## GitHub Publishing
+
+This repository publishes through the configured Git remote and the tag-driven
+GitHub Actions workflow. The GitHub CLI (`gh`) is not a project dependency and
+must not be required for commits, pushes, tags, releases, or release checks.
+
+- Use `git remote get-url origin` to identify the GitHub repository.
+- Push commits with `git push origin <branch>`.
+- Create an annotated `vX.Y.Z` tag and push it with
+  `git push origin <tag>`; `.github/workflows/release.yml` creates the GitHub
+  Release and uploads its assets.
+- Verify Git state with `git status`, `git log`, and `git ls-remote`.
+- If release verification is needed, use the public GitHub Actions/Release URL
+  or public HTTPS API. Do not report missing or stale `gh` authentication as a
+  publishing blocker when the Git remote works.

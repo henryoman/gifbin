@@ -131,7 +131,11 @@ GitHub releases are automated from SemVer tags:
 
 ```sh
 version=0.0.3
-git tag "v${version}"
+./scripts/set-version "$version"
+git add app.zon build.zig.zon CHANGELOG.md
+git commit -m "Release gifbin ${version}"
+git push origin main
+git tag -a "v${version}" -m "gifbin v${version}"
 git push origin "v${version}"
 ```
 
@@ -139,6 +143,9 @@ Pushing a `vX.Y.Z` tag runs `.github/workflows/release.yml`, stamps that version
 into the Native SDK manifests for the release build, validates the app, builds a
 ReleaseSafe macOS binary, packages `zig-out/package/gifbin.app`, zips it, and
 publishes the zip plus a SHA-256 checksum to the GitHub release.
+
+Publishing uses the configured `origin` Git remote. The GitHub CLI (`gh`) is
+not required; pushing the version tag starts the release workflow.
 
 For local packaging, use the direct Native SDK CLI path:
 
