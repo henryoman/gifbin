@@ -3,7 +3,7 @@
     .name = "gifbin",
     .display_name = "gifbin",
     .description = "A native desktop tool for arranging image frames and exporting GIFs.",
-    .version = "0.0.2",
+    .version = "0.0.3",
     .theme = "geist",
     .icons = .{"assets/icon.png"},
     .platforms = .{"macos"},

@@ -1,7 +1,7 @@
 # Native SDK Source Docs Snapshot
 
 This folder contains a local snapshot of the Native SDK documentation source
-from `vercel-labs/native` v0.4.4, refreshed on 2026-07-11 for this project.
+from `vercel-labs/native` v0.5.1, refreshed on 2026-07-13 for this project.
 
 Use these files together with the installed Native SDK agent skills:
 

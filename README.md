@@ -21,8 +21,8 @@ dialogs, drag/drop, preview registration, and GIF export.
 
 ## Native SDK
 
-The important architectural choice in this repo is the Vercel Labs Native SDK.
-Native SDK gives the app a real desktop window, native lifecycle/runtime
+The important architectural choice in this repo is Vercel Labs Native SDK
+0.5.1. Native SDK gives the app a real desktop window, native lifecycle/runtime
 services, GPU-rendered surfaces, canvas UI widgets, automation hooks, dialogs,
 and packaging/build tooling while keeping application behavior in Zig.
 
@@ -178,6 +178,7 @@ The Native SDK dependency is a local path in `build.zig.zon`. Reconfigure it
 after installing or moving the SDK:
 
 ```sh
+bun add -g @native-sdk/cli@0.5.1
 ./scripts/configure-native-sdk-path
 ```
 
